@@ -1,0 +1,6 @@
+{% load wagtailimages_tags %}
+
+<div class="image">
+    {% image self fill-800x440 as img %}
+    <img src="{{ img.url }}" alt="{{ self.title }}" class="w-full h-full rounded-lg" />
+</div>

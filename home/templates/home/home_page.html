@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+{% load static wagtailimages_tags wagtailcore_tags %}
+
+
+{% block content %}
+
+<!-- start hero section -->
+<div class="relative isolate overflow-hidden bg-gray-900">
+
+    <svg
+      class="absolute inset-0 -z-10 h-full w-full stroke-white/10 [mask-image:radial-gradient(100%_100%_at_top_right,white,transparent)]"
+      aria-hidden="true">
+      <defs>
+        <pattern id="983e3e4c-de6d-4c3f-8d64-b9761d1534cc" width="200" height="200" x="100%" y="-1"
+          patternUnits="userSpaceOnUse">
+          <path d="M.5 200V.5H200" fill="none"></path>
+        </pattern>
+      </defs>
+      <svg x="50%" y="-1" class="overflow-visible fill-gray-800/20">
+        <path d="M-200 0h201v201h-201Z M600 0h201v201h-201Z M-400 600h201v201h-201Z M200 800h201v201h-201Z"
+          stroke-width="0"></path>
+      </svg>
+      <rect width="100%" height="100%" stroke-width="0" fill="url(#983e3e4c-de6d-4c3f-8d64-b9761d1534cc)"></rect>
+    </svg>
+
+    <div class="absolute left-[calc(50%-4rem)] top-10 -z-10 transform-gpu blur-3xl sm:left-[calc(50%-18rem)] lg:left-48 lg:top-[calc(50%-30rem)] xl:left-[calc(50%-24rem)]"
+        aria-hidden="true">
+        <div class="aspect-[1108/632] w-[69.25rem] bg-gradient-to-r from-[#80caff] to-[#4f46e5] opacity-20"
+            style="clip-path:polygon(73.6% 51.7%, 91.7% 11.8%, 100% 46.4%, 97.4% 82.2%, 92.5% 84.9%, 75.7% 64%, 55.3% 47.5%, 46.5% 49.4%, 45% 62.9%, 50.3% 87.2%, 21.3% 64.1%, 0.1% 100%, 5.4% 51.1%, 21.4% 63.9%, 58.9% 0.2%, 73.6% 51.7%)">
+        </div>
+    </div>
+
+    <div class="mt-[-50px] flex h-screen items-center justify-center">
+
+        <div class="max-w-full flex-shrink-0 px-4 text-center lg:mx-0 lg:max-w-3xl lg:pt-8">
+            <h1 class="mt-10 text-5xl font-bold tracking-tight text-white sm:text-6xl">
+                Revolutionize
+                <span class="text-sky-500">Your Tech Knowledge</span> With
+                <span class="text-sky-500">{{ page.title }}</span>
+            </h1>
+
+            <p class="mt-6 text-lg leading-8 text-gray-300">{{ page.summary }}</p>
+
+            <div class="mt-5 flex items-center justify-center gap-x-6">
+                <a href="/register"
+                class="rounded-md bg-sky-500 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-sky-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-400"
+                rel="noreferrer">Subscribe Now →</a>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<!-- end hero section -->
+
+<!-- start article section -->
+<div class="bg-gray-900">
+    <div class="container mx-auto px-4 py-8">
+        <div class="flex flex-col lg:flex-row">
+
+            <!-- Main Content Section -->
+            <div class="w-full lg:w-2/3">
+
+                <!-- Page Header -->
+                <h1 class="text-4xl text-white font-bold mb-2">Articles</h1>
+                <p class="text-lg text-gray-400 mb-8">View the latest news on Blogger</p>
+    
+                <!-- Articles List -->
+                <div class="space-y-8">
+
+                    {% for post in blog_posts %}
+
+                        <!-- Article 1 -->
+                        <div class="flex flex-col md:flex-row">
+
+                            <div class="w-full md:w-1/3  mb-4 md:mb-0 md:mr-4" >
+
+                                {% if post.image %}
+                                    <div class="image-container">
+                                        {% image post.image fill-300x200 as img %}
+                                        <img class="rounded-lg" src="{{ img.url }}" alt="{{ img.title }}" />
+                                    </div>
+                                {% else %}
+                                    <p>No images available for this post.</p>
+                                {% endif %}
+
+                            </div>
+
+                            <div>
+
+                                {% for orderable in post.categories.all %}
+                                    <a href="#" class="bg-{{ orderable.category.color }}-200 hover:bg-{{ orderable.category.color }}-300 py-1 px-2 mr-1 mb-1 rounded-lg text-sm font-semibold ">
+                                        {{ orderable.category.name }}
+                                    </a>
+                                {% endfor %}
+
+                                <h2 class="text-2xl text-white font-bold mb-2">{{ post.title }}</h2>
+                                <p class="text-gray-400 mb-2">
+                                    {{ post.author }}
+                                    <span class="mx-2">•</span>
+                                    <i class="far fa-clock"></i> {{ post.first_published_at|date:"F d, Y" }}
+                                    <span class="mx-2">•</span> 2 min
+                                    
+                                </p>
+                                <p class="text-white mb-4">{{ post.intro|truncatewords:10 }}</p>
+                                <a class="text-black text-gray-400 font-semibold" href="{{ post.url }}">
+                                    Read More
+                                    <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                    {% endfor%}
+
+                </div>
+
+                <!-- Pagination -->
+                {% if blog_posts.paginator.num_pages >= 1 %}
+                    <div class="flex justify-center mt-8">
+                        <nav class="inline-flex space-x-2">
+                            {% for page_num in blog_posts.paginator.page_range %}
+                                <a class="px-3 py-1 border border-orange-500 rounded-md text-white hover:bg-gray-700 {% if page_num == blog_posts.number %}bg-gray-700{% endif %}" href="?page={{ page_num }}">
+                                    {{ page_num }}
+                                </a>
+                            {% endfor %}
+                        </nav>
+                    </div>
+                {% endif %}
+
+            </div>
+
+            <!-- Sidebar Section -->
+            <div class="w-full lg:w-1/3 lg:pl-8 mt-8 lg:mt-0">
+                <h2 class="text-2xl text-white font-bold mb-4">TRENDING POST</h2>
+                <div class="space-y-4">
+
+                    {% for post in blog_posts%}
+
+                        <!-- Trending Post 1 -->
+                        <div class="flex items-center">
+
+                            {% if post.image %}
+                                <div class="image-container">
+                                    {% image post.image fill-60x60 as img %}
+                                    <img class="w-16 h-16 rounded-lg mr-4" src="{{ img.url }}" alt="{{ img.title }}" />
+                                </div>
+                            {% else %}
+                                <p>No images available for this post.</p>
+                            {% endif %}
+
+                            <div>
+                                <a href="{{ post.url }}">
+                                    <h3 class="text-lg text-white font-semibold">{{ post.title }}</h3>
+                                </a>
+                                <p class="text-gray-400 text-sm">
+                                    <i class="far fa-clock"></i> {{ post.first_published_at|date:"F d, Y" }}
+                                    <span class="mx-2">•</span>
+                                    2 min
+                                </p>
+                            </div>
+
+                        </div>
+
+                    {% endfor%}
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- end article section -->
+
+{% endblock %}
